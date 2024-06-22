@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Rock Paper Scissors Game</title>
+    <style>
+        * {
+            font-family: Helvetica;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Helvetica;
+            background-color: #EAD196;
+            background-image: url('background.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .pickDisplay {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: -50px;
+
+        }
+        .res {
+             font-size: 24px;
+            font-weight: bolder;
+            color: rgb(39, 39, 39);
+            margin-top: 10px;
+
+        }
+        .user,.versus,.comp {
+            width: 33%;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: -20px;
+        }
+        .ver {
+            font-size: 90px;
+            font-weight: bolder;
+        }
+        /* .comp{
+            width: 33%;
+        } */ 
+        .choice-img {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+        }
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            font-size: 18px;
+            margin: 5px;
+        }
+        .pScore {
+            margin: 0px 0px 0px 0px;
+        }
+        .cScore {
+            margin: 0px 0px 0px 260px;
+        }
+
+        .resultIndi {
+            text-align: center;
+            justify-content: center;
+        }
+        .winner-message {
+            position: relative;
+            font-size: 24px;
+            font-weight: bolder;
+            color: rgb(255, 230, 0);
+            margin-top: 10px;
+        }
+                @keyframes fireworks {
+            0% { transform: translateY(0) rotateZ(0); }
+            50% { transform: translateY(-300px) rotateZ(180deg); }
+            100% { transform: translateY(-600px) rotateZ(360deg); }
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ffdb4d;
+            border-radius: 50%;
+            animation: fireworks 2s ease-out;
+        }
+        
+        .image-button {
+            background: url('default.png') no-repeat center center;
+            background-size: contain;
+            width: 250px; 
+            height: 100px; 
+            border: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .image-button:active {
+            background: url('clicked.png') no-repeat center center;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1> RANDOM ROCK PAPER SCISSORS </h1>
+        <div class="pickDisplay">
+            <div class="user">
+                <p>Player</p> 
+                <img id="userpick" class="choice-img" src="uRock.png" alt="uRock.png" >
+            </div>
+
+            <div class="versus">
+                <p class="ver">VS</p>
+            </div>
+
+            <div class="comp">
+                <p>Computer</p>
+                <img id="comppick" class="choice-img" style="transform: scaleX(-1);" src="uRock.png" alt="uRock.png">
+            </div>
+        </div>
+        <div class="resultIndi">
+            <p id="result1" class="res"></p>
+        </div>
+        
+        <div class="scoreboard">
+            <p class="pScore">Player Score: <span id="playerScore">0</span> </p>
+            <p class="cScore">Computer Score: <span id="computerScore">0</span> </p>
+        </div>
+        <p id="finalResult" class="winner-message"></p>
+
+        <button class="image-button" onclick="playGame()"></button>
+
+        <!-- <button id="playButton" onclick="playGame()">Play</button> -->
+        <div id="fireworks"></div>
+    </div>
+
+    <script>
+        const choices = ["Rock", "Paper", "Scissors"];
+        const images = {
+            "Rock": "uRock.png",
+            "Paper": "uPaper.png",
+            "Scissors": "uScissor.png"
+        };
+        let playerScore = 0;
+        let computerScore = 0;
+        const maxScore = 5;
+
+        function playGame() {
+            const userPickImg = document.getElementById('userpick');
+            const compPickImg = document.getElementById('comppick');
+            const result = document.getElementById('result1');
+            const playerScoreElem = document.getElementById('playerScore');
+            const computerScoreElem = document.getElementById('computerScore');
+            const finalResult = document.getElementById('finalResult');
+
+            const userRandomIndex = Math.floor(Math.random() * choices.length);
+            const compRandomIndex = Math.floor(Math.random() * choices.length);
+
+            const userChoice = choices[userRandomIndex];
+            const compChoice = choices[compRandomIndex];
+
+            userPickImg.src = images[userChoice];
+            compPickImg.src = images[compChoice];
+
+            const winner = determineWinner(userChoice, compChoice);
+            result.innerHTML = winner;
+
+            if (winner === "Player Wins!") {
+                playerScore++;
+                playerScoreElem.innerHTML = playerScore;
+            } else if (winner === "Computer Wins!") {
+                computerScore++;
+                computerScoreElem.innerHTML = computerScore;
+            }
+
+            if (playerScore === maxScore || computerScore === maxScore) {
+                finalResult.innerHTML = playerScore === maxScore ? "Player is the Grand Winner!" : "Computer is the Grand Winner!";
+                showFireworks();
+                setTimeout(resetGame, 1500);
+            }
+        }
+        
+        function determineWinner(userChoice, compChoice) {
+            if (userChoice === compChoice) {
+                return "It's a Tie!";
+            } else if (
+                (userChoice === "Rock" && compChoice === "Scissors") ||
+                (userChoice === "Paper" && compChoice === "Rock") ||
+                (userChoice === "Scissors" && compChoice === "Paper")
+            ) {
+                return "Player Wins!";
+            } else {
+                return "Computer Wins!";
+            }
+        }
+
+        function showFireworks() {
+        const fireworksContainer = document.getElementById('fireworks');
+        fireworksContainer.style.display = 'block';
+
+        // Create multiple fireworks
+        for (let i = 0; i < 20; i++) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            fireworksContainer.appendChild(firework);
+
+            // Randomize position within the container
+            const xPos = Math.random() * window.innerWidth;
+            const yPos = Math.random() * window.innerHeight;
+            firework.style.left = xPos + 'px';
+            firework.style.top = yPos + 'px';
+
+            // Remove the firework element after animation ends
+            firework.addEventListener('animationend', () => {
+                firework.remove();
+            });
+        }
+
+         // Hide fireworks after 3 seconds
+         setTimeout(() => {
+             fireworksContainer.style.display = 'none';
+             
+         }, 3000);
+}
+
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            document.getElementById('playerScore').innerHTML = playerScore;
+            document.getElementById('computerScore').innerHTML = computerScore;
+            document.getElementById('result1').innerHTML = '';
+            document.getElementById('finalResult').innerHTML = '';
+            document.getElementById('userpick').src = 'uRock.png';
+            document.getElementById('comppick').src = 'uRock.png';
+        }
+    </script>
+</body>
+</html>

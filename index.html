@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Rock Paper Scissors Game</title>
+    <title>Random Rock-Paper-Scissors Game</title>
     <style>
         * {
             font-family: Helvetica;
@@ -121,7 +121,9 @@
 <body>
     
     <div class="container">
+
         <h1> RANDOM ROCK PAPER SCISSORS </h1>
+
         <div class="pickDisplay">
             <div class="user">
                 <p>Player</p> 
@@ -136,6 +138,7 @@
                 <p>Computer</p>
                 <img id="comppick" class="choice-img" style="transform: scaleX(-1);" src="uRock.png" alt="uRock.png">
             </div>
+
         </div>
         <div class="resultIndi">
             <p id="result1" class="res"></p>
@@ -145,11 +148,11 @@
             <p class="pScore">Player Score: <span id="playerScore">0</span> </p>
             <p class="cScore">Computer Score: <span id="computerScore">0</span> </p>
         </div>
+        
         <p id="finalResult" class="winner-message"></p>
 
         <button class="image-button" onclick="playGame()"></button>
 
-        <!-- <button id="playButton" onclick="playGame()">Play</button> -->
         <div id="fireworks"></div>
     </div>
 
@@ -217,25 +220,21 @@
         const fireworksContainer = document.getElementById('fireworks');
         fireworksContainer.style.display = 'block';
 
-        // Create multiple fireworks
         for (let i = 0; i < 20; i++) {
             const firework = document.createElement('div');
             firework.classList.add('firework');
             fireworksContainer.appendChild(firework);
 
-            // Randomize position within the container
             const xPos = Math.random() * window.innerWidth;
             const yPos = Math.random() * window.innerHeight;
             firework.style.left = xPos + 'px';
             firework.style.top = yPos + 'px';
 
-            // Remove the firework element after animation ends
             firework.addEventListener('animationend', () => {
                 firework.remove();
             });
         }
 
-         // Hide fireworks after 3 seconds
          setTimeout(() => {
              fireworksContainer.style.display = 'none';
              
